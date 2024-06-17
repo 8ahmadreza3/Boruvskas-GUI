@@ -18,8 +18,8 @@ public class GUI extends Application {
     private Boruvskas b = new Boruvskas();
     private ArrayList<Circle> nodes = new ArrayList<>();
     private int weight = 0;
-    private int l = 0 ;
-    private int p = 0 ;
+    private int l = -1 ;
+    private int p = -1 ;
     private Label sumWeight = new Label("0");
     @Override
     public void start(Stage primaryStage) {
@@ -30,49 +30,42 @@ public class GUI extends Application {
     public void drawMST(){
         if(p<0)
             p=0 ;
-        if(l<0){
+        if(l<0)
             l=0 ;
-            weight=0;
-        }
         if(p>= b.nodes.size())
-            p-- ;
-        if(l>= b.cheapest.size()){
-            weight-= b.cheapest.get(l-1).w ;;
-            l-- ;
-        }
-        Edge e = b.cheapest.get(l);
-        if(e.u == b.nodes.get(p) || e.v == b.nodes.get(p)){
-            b.cheapest.get(l).line.setStroke(Color.GREEN);
-            this.weight+= b.cheapest.get(l).w ;
-            sumWeight.setText(weight+ "");
-            System.out.println(weight);
-            ++l ;
-        }
+            return ;
+        if(l< b.cheapest.size()){
+            Edge e = b.cheapest.get(l);
+            if(e.u == b.nodes.get(p) || e.v == b.nodes.get(p)){
+                b.cheapest.get(l).line.setStroke(Color.GREEN);
+                calculateWeight(l);
+                ++l ;
+            }
+        }    
         nodes.get(p).setFill(Color.GREEN);
         ++p ;
+        if(  p==b.nodes.size()+1){
+            resetMST();
+        }
     }
 
-    public void backMST(){
-        if(--p<0)
-            p=0 ;
-        if(--l<0){
-            l=0 ;
-            weight=0 ;
+    public void calculateWeight(int i){
+        weight = 0 ;
+        for(int k=0 ; k<=i ; ++k){
+            weight+= b.cheapest.get(k).w;
         }
-        if(p>= b.nodes.size())
-            p-- ;
-        if(l>= b.cheapest.size()){
-            weight+= b.cheapest.get(l).w ;
-            l-- ;
+        sumWeight.setText(weight+ "");
+    }
+
+    public void resetMST(){
+        for(Circle c : nodes){
+            c.setFill(Color.RED);
         }
-        Edge e = b.cheapest.get(l);
-        if(e.u == b.nodes.get(p) || e.v == b.nodes.get(p)){
-            b.cheapest.get(l).line.setStroke(Color.BLACK);
-            this.weight-= b.cheapest.get(l+1).w ;
-            System.out.println(weight);
-            sumWeight.setText(weight+ "");
+        for(Edge l : b.cheapest){
+            l.line.setStroke(Color.BLACK);
         }
-        nodes.get(p).setFill(Color.RED);
+        p = l = -1 ;
+        calculateWeight(l);
     }
 
     public void draw(){
@@ -84,13 +77,13 @@ public class GUI extends Application {
         next.setOnAction(event -> drawMST());
         next.setLayoutX(1354);
         next.setLayoutY(0);
-        Button prev = new Button("PREV STEP !!!");
-        prev.setOnAction(event -> backMST());
+        Button reset = new Button("RESET MST!!!");
+        reset.setOnAction(event -> resetMST());
         sumWeight.setLayoutX(0);
         sumWeight.setLayoutY(650);
         sumWeight.setFont(new Font("Arial", 50));
         sumWeight.setTextFill(Color.YELLOW);
-        group.getChildren().addAll(next, prev, sumWeight);
+        group.getChildren().addAll(next, reset, sumWeight);
         Scene scene = new Scene(group, 1440, 720 , Color.SKYBLUE);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
