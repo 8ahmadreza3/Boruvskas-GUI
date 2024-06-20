@@ -1,4 +1,5 @@
 package com.example.boruvska;
+
 import java.util.*;
 
 public class Boruvskas {
@@ -6,6 +7,12 @@ public class Boruvskas {
     public ArrayList<Edge> cheapest = new ArrayList<>() ;
     public ArrayList<Edge> edges = new ArrayList<>();
     public int weight = 0 ;
+    public int[][] sets ;
+    public int n = 0 ;
+
+    public Boruvskas( int nodes){
+        this.sets = new int[2*nodes][nodes];
+    }
 
     public int calculateWeight(){
         for(Edge e: this.cheapest){
@@ -14,19 +21,29 @@ public class Boruvskas {
         return this.weight;
     }
 
+    public void addCheapest(Edge e){
+        int j = 0 ;
+        for(Node node : nodes){
+            sets[n][j] = node.set ;
+            j++ ;
+        }
+        ++n ;
+        cheapest.add(e) ;
+    }
+
     public void boruvskasMST(){
         for(Node node: this.nodes){
             Edge e = node.minNeighbor(this) ;
             if(e.v != null || e.u != null){
                 e.insertMST() ;
-                cheapest.add(e) ;
+                addCheapest(e);
             }
         }
         int n = nodes.size();
         for (int i=0 ; i<n ; ++i){
             Edge min = new Edge(null, null, Integer.MAX_VALUE);
             for(Node node : nodes){
-                if(node.set == i ){
+                if(node.set == 0){
                     Edge e = node.minNeighborSet();
                     if(min.w > e.w){
                         min = e ;
@@ -59,7 +76,7 @@ public class Boruvskas {
         }
         e.v.neighbors.remove(e);
         e.u.neighbors.remove(e);
-        cheapest.add(e) ;
+        addCheapest(e);
     }
 
     public static void main(String[] args){
@@ -69,7 +86,7 @@ public class Boruvskas {
         Node v3 = new Node(3);
         Node v4 = new Node(4);
         Node v5 = new Node(5);
-        Boruvskas b = new Boruvskas();
+        Boruvskas b = new Boruvskas(6);
         b.nodes.add(v0);
         b.nodes.add(v1);
         b.nodes.add(v2);

@@ -15,12 +15,14 @@ import java.util.ArrayList;
 
 public class GUI extends Application {
     private Stage primaryStage;
-    private Boruvskas b = new Boruvskas();
+    private Boruvskas b ;
     private ArrayList<Circle> nodes = new ArrayList<>();
     private int weight = 0;
     private int l = -1 ;
     private int p = -1 ;
     private Label sumWeight = new Label("0");
+    static Color[] colors = {Color.GREEN, Color.BLUE, Color.RED , Color.YELLOW, Color.ORANGE, Color.PURPLE, Color.WHITE, Color.PINK, Color.BROWN};
+
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage ;
@@ -35,16 +37,23 @@ public class GUI extends Application {
         if(p>= b.nodes.size())
             return ;
         if(l< b.cheapest.size()){
+            for(int j=0 ; j<nodes.size() ; ++j){
+                nodes.get(j).setFill(colors[b.sets[l][j]]);
+            }
             Edge e = b.cheapest.get(l);
             if(e.u == b.nodes.get(p) || e.v == b.nodes.get(p)){
-                b.cheapest.get(l).line.setStroke(Color.GREEN);
+                e.line.setStroke(Color.GREEN);
+                for(Edge edge : b.cheapest){
+                    if(b.sets[l][edge.u.value] == b.sets[l][edge.v.value]){
+                        edge.line.setStroke(colors[b.sets[l][edge.u.value]]);
+                    }
+                }
                 calculateWeight(l);
                 ++l ;
             }
-        }    
-        nodes.get(p).setFill(Color.GREEN);
+        }
         ++p ;
-        if(  p==b.nodes.size()+1){
+        if(p==b.nodes.size()+1){
             resetMST();
         }
     }
@@ -91,26 +100,41 @@ public class GUI extends Application {
     }
 
     public void createGraph(Group group){
+        this.b = new Boruvskas(9);
         Node v0 = new Node(0);
         Node v1 = new Node(1);
         Node v2 = new Node(2);
         Node v3 = new Node(3);
         Node v4 = new Node(4);
         Node v5 = new Node(5);
+        Node v6 = new Node(6);
+        Node v7 = new Node(7);
+        Node v8 = new Node(8);
         b.nodes.add(v0);
         b.nodes.add(v1);
         b.nodes.add(v2);
         b.nodes.add(v3);
         b.nodes.add(v4);
         b.nodes.add(v5);
+        b.nodes.add(v6);
+        b.nodes.add(v7);
+        b.nodes.add(v8);
         b.addEdge(v0, v1, 4);
-        b.addEdge(v0, v2, 2);
-        b.addEdge(v0, v3, 1);
-        b.addEdge(v1, v4, 3);
-        b.addEdge(v1, v5, 2);
-        b.addEdge(v2, v3, 7);
-        b.addEdge(v3, v4, 1);
-        b.addEdge(v5, v4, 3);
+        b.addEdge(v0, v6, 7);
+        b.addEdge(v1, v2, 4);
+        b.addEdge(v1, v6, 11);
+        b.addEdge(v1, v7, 20);
+        b.addEdge(v2, v3, 6);
+        b.addEdge(v2, v4, 2);
+        b.addEdge(v3, v4, 10);
+        b.addEdge(v3, v5, 4);
+        b.addEdge(v4, v5, 15);
+        b.addEdge(v4, v7, 6);
+        b.addEdge(v4, v8, 5);
+        b.addEdge(v5, v8, 12);
+        b.addEdge(v6, v7, 7);
+        b.addEdge(v7, v8, 3);
+
         for(Edge e: b.edges){
             Line line = new Line(e.u.x, e.u.y, e.v.x, e.v.y);
             line.setStrokeWidth(5.0f);
@@ -130,12 +154,13 @@ public class GUI extends Application {
             circle.setCenterX(node.x);
             circle.setCenterY(node.y);
             circle.setRadius(40);
-            circle.setFill(Color.RED);
+            circle.setFill(colors[node.set]);
             Label value = new Label("V"+node.value);
             value.setLayoutX(node.x-25);
             value.setLayoutY(node.y-22);
             value.setFont(new Font("Arial", 40));
             group.getChildren().addAll(circle , value);
+            node.c = circle ;
             nodes.add(circle);
         }
     }

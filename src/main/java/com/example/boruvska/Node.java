@@ -1,4 +1,6 @@
 package com.example.boruvska;
+import javafx.scene.shape.Circle;
+
 import java.util.ArrayList;
 
 public class Node {
@@ -8,6 +10,7 @@ public class Node {
     public ArrayList<Edge> neighbors = new ArrayList<>();
     public int x ;
     public int y ;
+    public Circle c ;
 
     public Node(int value){
         this.value = value;
