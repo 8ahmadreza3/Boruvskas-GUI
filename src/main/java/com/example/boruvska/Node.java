@@ -16,10 +16,10 @@ public class Node {
         this.value = value;
         this.color = "Red";
         this.set = value;
-        int x = (int) (Math.random()*25);
-        int y = (int) (Math.random()*13);
-        this.y = y*50 +45 ;
-        this.x = x*50 +50 ;
+        int x = (int) (Math.random()*10);
+        int y = (int) (Math.random()*6.5);
+        this.y = y*100 +35 ;
+        this.x = x*137 +35 ;
     }
 
     public String toString(){
@@ -46,7 +46,7 @@ public class Node {
             }
             return min ;
         }
-        this.removeNeighbors();
+//        this.removeNeighbors();
         return new Edge(null, null, Integer.MAX_VALUE);
     }
 

@@ -19,9 +19,9 @@ public class GUI extends Application {
     private ArrayList<Circle> nodes = new ArrayList<>();
     private int weight = 0;
     private int l = -1 ;
-    private int p = -1 ;
     private Label sumWeight = new Label("0");
-    static Color[] colors = {Color.GREEN, Color.BLUE, Color.RED , Color.YELLOW, Color.ORANGE, Color.PURPLE, Color.WHITE, Color.PINK, Color.BROWN};
+    static Color[] colors = {Color.GREEN, Color.RED , Color.YELLOW, Color.ORANGE,
+            Color.PURPLE, Color.WHITE, Color.BLUE, Color.PINK, Color.BROWN, Color.DARKKHAKI, Color.GOLD};
 
     @Override
     public void start(Stage primaryStage) {
@@ -30,31 +30,13 @@ public class GUI extends Application {
     }
 
     public void drawMST(){
-        if(p<0)
-            p=0 ;
-        if(l<0)
-            l=0 ;
-        if(p>= b.nodes.size())
-            return ;
-        if(l< b.cheapest.size()){
+        if(l< b.cheapest.size()-1){
+            ++l ;
             for(int j=0 ; j<nodes.size() ; ++j){
                 nodes.get(j).setFill(colors[b.sets[l][j]]);
             }
-            Edge e = b.cheapest.get(l);
-            if(e.u == b.nodes.get(p) || e.v == b.nodes.get(p)){
-                e.line.setStroke(Color.GREEN);
-                for(Edge edge : b.cheapest){
-                    if(b.sets[l][edge.u.value] == b.sets[l][edge.v.value]){
-                        edge.line.setStroke(colors[b.sets[l][edge.u.value]]);
-                    }
-                }
-                calculateWeight(l);
-                ++l ;
-            }
-        }
-        ++p ;
-        if(p==b.nodes.size()+1){
-            resetMST();
+            b.cheapest.get(l).line.setStroke(Color.GREEN);
+            calculateWeight(l);
         }
     }
 
@@ -73,7 +55,7 @@ public class GUI extends Application {
         for(Edge l : b.cheapest){
             l.line.setStroke(Color.BLACK);
         }
-        p = l = -1 ;
+        l = -1 ;
         calculateWeight(l);
     }
 
@@ -93,14 +75,14 @@ public class GUI extends Application {
         sumWeight.setFont(new Font("Arial", 50));
         sumWeight.setTextFill(Color.YELLOW);
         group.getChildren().addAll(next, reset, sumWeight);
-        Scene scene = new Scene(group, 1440, 720 , Color.SKYBLUE);
+        Scene scene = new Scene(group, 1440, 720 , Color.MIDNIGHTBLUE);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
     }
 
     public void createGraph(Group group){
-        this.b = new Boruvskas(9);
+        this.b = new Boruvskas(10);
         Node v0 = new Node(0);
         Node v1 = new Node(1);
         Node v2 = new Node(2);
@@ -110,6 +92,7 @@ public class GUI extends Application {
         Node v6 = new Node(6);
         Node v7 = new Node(7);
         Node v8 = new Node(8);
+        Node v9 = new Node(9);
         b.nodes.add(v0);
         b.nodes.add(v1);
         b.nodes.add(v2);
@@ -119,21 +102,21 @@ public class GUI extends Application {
         b.nodes.add(v6);
         b.nodes.add(v7);
         b.nodes.add(v8);
-        b.addEdge(v0, v1, 4);
-        b.addEdge(v0, v6, 7);
-        b.addEdge(v1, v2, 4);
-        b.addEdge(v1, v6, 11);
-        b.addEdge(v1, v7, 20);
-        b.addEdge(v2, v3, 6);
-        b.addEdge(v2, v4, 2);
-        b.addEdge(v3, v4, 10);
-        b.addEdge(v3, v5, 4);
-        b.addEdge(v4, v5, 15);
-        b.addEdge(v4, v7, 6);
-        b.addEdge(v4, v8, 5);
-        b.addEdge(v5, v8, 12);
-        b.addEdge(v6, v7, 7);
+        b.nodes.add(v9);
+        b.addEdge(v0, v2, 3);
+        b.addEdge(v1, v3, 5);
+        b.addEdge(v1, v4, 8);
+        b.addEdge(v1, v7, 9);
+        b.addEdge(v2, v3, 4);
+        b.addEdge(v3, v5, 3);
+        b.addEdge(v9, v3, 4);
         b.addEdge(v7, v8, 3);
+        b.addEdge(v4, v5, 2);
+        b.addEdge(v4, v6, 2);
+        b.addEdge(v4, v7, 1);
+        b.addEdge(v5, v6, 7);
+        b.addEdge(v8, v0, 2);
+        b.addEdge(v9, v6, 6);
 
         for(Edge e: b.edges){
             Line line = new Line(e.u.x, e.u.y, e.v.x, e.v.y);
@@ -145,7 +128,7 @@ public class GUI extends Application {
             Label weight = new Label(Integer.toString(e.w));
             weight.setLayoutX(x);
             weight.setLayoutY(y);
-            weight.setFont(new Font("Arial", 35));
+            weight.setFont(new Font("Arial", 30));
             weight.setTextFill(Color.YELLOW);
             group.getChildren().addAll(line, weight);
         }
@@ -153,7 +136,7 @@ public class GUI extends Application {
             Circle circle = new Circle();
             circle.setCenterX(node.x);
             circle.setCenterY(node.y);
-            circle.setRadius(40);
+            circle.setRadius(30);
             circle.setFill(colors[node.set]);
             Label value = new Label("V"+node.value);
             value.setLayoutX(node.x-25);

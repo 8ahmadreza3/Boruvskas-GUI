@@ -43,7 +43,8 @@ public class Boruvskas {
         for (int i=0 ; i<n ; ++i){
             Edge min = new Edge(null, null, Integer.MAX_VALUE);
             for(Node node : nodes){
-                if(node.set == 0){
+                //TODO
+                if(node.set == i){
                     Edge e = node.minNeighborSet();
                     if(min.w > e.w){
                         min = e ;
@@ -80,29 +81,29 @@ public class Boruvskas {
     }
 
     public static void main(String[] args){
+        Boruvskas b = new Boruvskas(8);
         Node v0 = new Node(0);
         Node v1 = new Node(1);
         Node v2 = new Node(2);
         Node v3 = new Node(3);
         Node v4 = new Node(4);
         Node v5 = new Node(5);
-        Boruvskas b = new Boruvskas(6);
         b.nodes.add(v0);
         b.nodes.add(v1);
         b.nodes.add(v2);
         b.nodes.add(v3);
         b.nodes.add(v4);
         b.nodes.add(v5);
-        b.addEdge(v0, v1, 4);
-        b.addEdge(v0, v2, 2);
-        b.addEdge(v0, v3, 1);
-        b.addEdge(v1, v4, 3);
-        b.addEdge(v1, v5, 2);
-        b.addEdge(v2, v3, 7);
-        b.addEdge(v3, v4, 1);
-        b.addEdge(v5, v4, 3);
+        b.addEdge(v0, v1, 2);
+        b.addEdge(v0, v4, 3);
+        b.addEdge(v1, v2, 4);
+        b.addEdge(v1, v3, 3);
+        b.addEdge(v1, v5, 5);
+        b.addEdge(v2, v3, 4);
+        b.addEdge(v2, v5, 2);
+        b.addEdge(v4, v5, 1);
+
         b.boruvskasMST();
-        System.out.println(b.calculateWeight());
         System.out.println(Arrays.toString(b.cheapest.toArray()));
     }
 }
